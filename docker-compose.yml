@@ -1,0 +1,25 @@
+version: "3.3"
+services:
+
+    dancer:
+        build: .
+        depends_on:
+            - mysql
+        environment:
+            INSECURE_DEMO_DBREADONLY: "dbi:mysql:dbname=events;host=mysql"
+            INSECURE_DEMO_DBREADONLY_USERNAME: "readonly"
+            INSECURE_DEMO_DBREADONLY_PASSWORD: "6a9914ea4e7fd8813a9c6a867eea0c3619ecb9441fbee9534852e06e816301e8"
+
+            INSECURE_DEMO_DBCONNECTION: "dbi:mysql:dbname=events;host=mysql"
+            INSECURE_DEMO_DBCONNECTION_USERNAME: "site"
+            INSECURE_DEMO_DBCONNECTION_PASSWORD: "84aaa213dbb7aa3d67d57ba49acc2a71b7c4cd8bf689bfdf4372e4a34dceeca0"
+
+        image: insecure-demo:v1
+
+    mysql:
+        environment:
+            MYSQL_RANDOM_ROOT_PASSWORD: 1
+        image: mysql/mysql-server
+        volumes:
+            - ./mysql-data:/var/lib/mysql
+            - ./sql:/docker-entrypoint-initdb.d/
