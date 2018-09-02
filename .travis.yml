@@ -1,0 +1,17 @@
+language: perl
+perl:
+  - "5.26"
+  - "5.10"
+matrix:
+  include:
+    - perl: 5.28
+      env: COVERAGE=1
+      sudo: required
+      script:
+        - cpanm -n --skip-satisfied Devel::Cover::Report::Coveralls
+        - PERL5OPT=-MDevel::Cover prove -lv t
+        - ./run-xt.sh
+      after_success: cover -report coveralls -select_re ^lib/
+
+before_install:
+  - eval $(curl https://travis-perl.github.io/init) --auto
