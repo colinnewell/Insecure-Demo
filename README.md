@@ -9,13 +9,15 @@ You can then fix them or exploit them.
 
 ## Running
 
+    docker-compose up -d
+
 ## Debugging
 
 ## Building with a local CPAN.
 
 For the travellers with flaky internet a local CPAN can be an amazing tool.
 To make it simple to build the docker container with that it's possible to
-inject an 'EXTRA_CPANM' variable to pass cpanm extra command line parameters,
+inject an `EXTRA_CPANM` variable to pass cpanm extra command line parameters,
 like a the mirror to use.
 
     sudo docker build . --build-arg "EXTRA_CPANM=-Mhttp://172.17.0.1:8090"
