@@ -1,0 +1,5 @@
+USE demo;
+CREATE TABLE hidden (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    secret TEXT NOT NULL
+);
