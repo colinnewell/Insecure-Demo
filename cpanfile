@@ -1,6 +1,7 @@
 requires "Cpanel::JSON::XS"                   => "0";
 requires "Dancer2"                            => "0";
 requires "Dancer2::Template::Alloy"           => "0";
+requires "File::ShareDir"                     => "0";
 requires "Moo"                                => "0";
 requires "Path::Tiny"                         => "0";
 requires "Plack::Builder"                     => "0";
@@ -23,7 +24,7 @@ on 'test' => sub {
 };
 
 on 'test' => sub {
-    recommends "CPAN::Meta"      => "2.120900";
+    recommends "CPAN::Meta" => "2.120900";
 };
 
 on 'configure' => sub {

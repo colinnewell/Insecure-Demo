@@ -4,3 +4,4 @@
 dist.ini
 docker-compose.yml
 Insecure-Demo*
+mysql-data
