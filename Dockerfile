@@ -6,8 +6,9 @@ WORKDIR /opt/insecure-demo
 RUN apt-get update                                                       \
     && apt-get -y --no-install-recommends install default-libmysqlclient-dev
 
-# test but don't install test deps.
 ARG EXTRA_CPANM=""
+RUN cpanm DBD::mysql@4.046 $EXTRA_CPANM
+# test but don't install test deps.
 RUN cpanm --test-only --installdeps . $EXTRA_CPANM && cpanm --notest --quiet --installdeps . $EXTRA_CPANM
 COPY . /opt/insecure-demo
 
