@@ -3,3 +3,4 @@
 .travis.yml
 dist.ini
 docker-compose.yml
+Insecure-Demo*
