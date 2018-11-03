@@ -2,7 +2,7 @@ version: "3.3"
 services:
 
     dancer:
-        build: .
+        image: quay.io/colinnewell/insecure-demo
         depends_on:
             - mysql
         environment:
@@ -13,8 +13,6 @@ services:
             INSECURE_DEMO_DBCONNECTION: "dbi:mysql:dbname=events;host=mysql"
             INSECURE_DEMO_DBCONNECTION_USERNAME: "site"
             INSECURE_DEMO_DBCONNECTION_PASSWORD: "84aaa213dbb7aa3d67d57ba49acc2a71b7c4cd8bf689bfdf4372e4a34dceeca0"
-
-        image: insecure-demo:v1
 
     mysql:
         environment:
