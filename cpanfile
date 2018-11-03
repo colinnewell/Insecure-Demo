@@ -1,3 +1,4 @@
+requires "Bread::Board"                       => "0";
 requires "Cpanel::JSON::XS"                   => "0";
 requires "Dancer2"                            => "0";
 requires "Dancer2::Template::Alloy"           => "0";
