@@ -9,9 +9,11 @@ You can then fix them or exploit them.
 
 ## Running
 
+To run on your machine run with docker commpose like this,
+
     docker-compose up -d
 
-## Debugging
+This will mount the source directory so that you can run the latest code.
 
 ## Building with a local CPAN.
 
