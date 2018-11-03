@@ -1,6 +1,5 @@
 requires "Cpanel::JSON::XS"                   => "0";
 requires "Dancer2"                            => "0";
-requires "Dancer2::Core::Types"               => "0";
 requires "Dancer2::Template::Alloy"           => "0";
 requires "Moo"                                => "0";
 requires "Path::Tiny"                         => "0";

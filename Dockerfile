@@ -11,4 +11,4 @@ COPY . /opt/insecure-demo
 RUN groupadd -r insecure && useradd -r -d /home/insecure -g insecure insecure
 USER insecure
 
-CMD starman --preload-app -I /opt/insecure-demo/lib/ /opt/insecure-demo/bin/tt2-insecure-demo.psgi
+CMD starman --preload-app -I /opt/insecure-demo/lib/ /opt/insecure-demo/bin/app.psgi
