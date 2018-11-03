@@ -26,13 +26,13 @@ any '/' => sub {
             client         => request->user_agent     || '',
             referer        => request->referer        || '',
             remote_address => request->remote_address || '',
-            email          => $email,
         )
       )
     {
         # is this the best way to bounce them?
         status 400;
     }
+    pass;
 };
 
 get '/' => sub {
