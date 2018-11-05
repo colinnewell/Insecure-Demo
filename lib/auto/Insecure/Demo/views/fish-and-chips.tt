@@ -1,0 +1,12 @@
+<table>
+    <tr>
+        <th>Name</th>
+        <th>Order</th>
+    </tr>
+    [% FOR order IN orders %]
+    <tr>
+        <td>[% order.name %]</td>
+        <td>[% order.food %]</td>
+    </tr>
+    [% END %]
+</table>

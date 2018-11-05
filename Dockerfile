@@ -11,7 +11,9 @@ WORKDIR /opt/insecure-demo
 COPY cpanfile /opt/insecure-demo/cpanfile
 
 # test but don't install test deps.
-RUN cpanm --test-only --installdeps . $EXTRA_CPANM && cpanm --notest --quiet --installdeps . $EXTRA_CPANM
+RUN cpanm --test-only --installdeps . $EXTRA_CPANM && \
+    cpanm --notest --quiet --installdeps . $EXTRA_CPANM
+
 COPY . /opt/insecure-demo
 
 RUN groupadd -r insecure && useradd -r -d /home/insecure -g insecure insecure

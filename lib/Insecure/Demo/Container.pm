@@ -15,6 +15,12 @@ my $services = container 'Services' => as {
             dbh => '/Dependencies/DBConnection',
         },
     );
+    service FishAndChips => (
+        class        => 'Insecure::Demo::Service::FishAndChips',
+        dependencies => {
+            dbh => '/Dependencies/DBConnection',
+        },
+    );
 };
 
 Bread::Board::set_root_container($services);

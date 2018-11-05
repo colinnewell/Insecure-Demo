@@ -2,6 +2,7 @@ requires "Bread::Board"                       => "0";
 requires "Cpanel::JSON::XS"                   => "0";
 requires "Dancer2"                            => "0";
 requires "Dancer2::Template::Alloy"           => "0";
+requires "DateTime"                           => "0";
 requires "DBD::mysql"                         => "0";
 requires "DBI"                                => "0";
 requires "DBIx::Class::Candy"                 => "0";

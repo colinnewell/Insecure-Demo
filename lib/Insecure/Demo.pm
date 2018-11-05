@@ -1,6 +1,7 @@
 package Insecure::Demo;
 
 use Dancer2;
+use DateTime;
 use File::ShareDir 'module_dir';
 use Insecure::Demo::Container 'service';
 use Path::Tiny;
@@ -37,6 +38,18 @@ any '/' => sub {
 
 get '/' => sub {
     template 'index' => { 'title' => 'Insecure::Demo' };
+};
+
+get '/fish-and-chips' => sub {
+    my $date = query_parameters->get('date') || DateTime->today->ymd;
+    my $order_data = service('FishAndChips')->orders(
+        date     => $date,
+        limit    => query_parameters->get('limit'),
+        offset   => query_parameters->get('offset'),
+        order_by => query_parameters->get('order_by'),
+    );
+    template 'fish-and-chips',
+      { title => 'Fish and Chips', orders => $order_data };
 };
 
 true;

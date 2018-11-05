@@ -1,0 +1,7 @@
+USE demo;
+CREATE TABLE fish_and_chips (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    name TEXT NOT NULL,
+    food TEXT NOT NULL,
+    added DATETIME DEFAULT NOW()
+);
