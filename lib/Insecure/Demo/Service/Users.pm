@@ -136,6 +136,17 @@ sub add_user {
         undef, $name, $user, $self->_hash($password) );
 }
 
+sub edit_user {
+    my ( $self, %args ) = @_;
+
+    $self->dbh->do(
+        'UPDATE users
+            SET name = ?, admin = ?
+          WHERE id = ?',
+        undef, $args{name}, $args{admin}, $args{id}
+    );
+}
+
 sub user_list {
     my $self = shift;
 

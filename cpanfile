@@ -1,5 +1,7 @@
 requires "Auth::GoogleAuth"                   => "0";
 requires "Bread::Board"                       => "0";
+requires "CGI::Compile"                       => "0";
+requires "CGI::Emulate::PSGI"                 => "0";
 requires "Cpanel::JSON::XS"                   => "0";
 requires "Crypt::Eksblowfish::Bcrypt"         => "0";
 requires "Crypt::Sodium"                      => "0";

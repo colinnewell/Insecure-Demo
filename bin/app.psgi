@@ -5,10 +5,14 @@
 use strict;
 use warnings;
 
-use Plack::Builder;
+use CGI::Compile;
+use CGI::Emulate::PSGI;
+use File::ShareDir 'module_dir';
 use Insecure::Demo;
 use Insecure::Demo::Admin;
 use Insecure::Demo::Admin::Login;
+use Path::Tiny;
+use Plack::Builder;
 
 my $secret_key = $ENV{INSECURE_DEMO_SECRET};
 unless ($secret_key) {
@@ -20,6 +24,9 @@ unless ($secret_key) {
     $secret_key = unpack 'H*', $bytes;
 }
 
+my $cgi_dir = path( module_dir('Insecure::Demo') )->child('cgi-bin')->stringify;
+my $cgi     = Plack::Builder->new;
+
 builder {
     enable 'Session::Cookie',
       session_key => 'insecure-demo',
@@ -27,12 +34,17 @@ builder {
       secret      => $secret_key;
     enable 'CSRFBlock';
 
-    # FIXME: load middleware to ensure logged in
     mount '/admin/login' => Insecure::Demo::Admin::Login->to_app;
-    mount '/admin' => builder {
+    mount '/admin'       => builder {
         enable '+Insecure::Demo::Middleware::Admin';
+        for (<$cgi_dir/admin/*.cgi>) {
+            my $sub    = CGI::Compile->compile($_);
+            my $app    = CGI::Emulate::PSGI->handler($sub);
+            my $path = '/cgi-bin/' . $_ =~ s|^.*/admin/||r;
+            mount $path, $app;
+        }
         mount '/' => Insecure::Demo::Admin->to_app;
     };
-    mount '/'      => Insecure::Demo->to_app;
+    mount '/' => Insecure::Demo->to_app;
 }
 
