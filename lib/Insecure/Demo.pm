@@ -10,7 +10,7 @@ use Path::Tiny;
 
 set appname => 'Insecure::Demo';
 set charset => 'UTF-8';
-set engines => { template => { AUTO_FILTER => 'html' } };
+set engines => { template => { Alloy => { AUTO_FILTER => 'html' } } };
 set layout  => 'main';
 set public_dir =>
   path( module_dir('Insecure::Demo') )->child('public')->stringify;
@@ -60,6 +60,7 @@ post '/fish-and-chips' => sub {
         );
     };
     if ($@) {
+
         # FIXME: do something about this.
         warn $@;
     }
