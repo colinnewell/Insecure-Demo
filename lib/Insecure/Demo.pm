@@ -52,4 +52,18 @@ get '/fish-and-chips' => sub {
       { title => 'Fish and Chips', orders => $order_data };
 };
 
+post '/fish-and-chips' => sub {
+    eval {
+        my $order = service('FishAndChips')->add_order(
+            name => body_parameters->get('name'),
+            food => body_parameters->get('food'),
+        );
+    };
+    if ($@) {
+        # FIXME: do something about this.
+        warn $@;
+    }
+    redirect request->uri;
+};
+
 true;

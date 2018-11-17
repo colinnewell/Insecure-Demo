@@ -34,4 +34,19 @@ sub orders {
     return $self->dbh->selectall_arrayref( $outer_sql, { Slice => {} }, @bind );
 }
 
+sub add_order {
+    my $self = shift;
+    my %args = validate @_,
+      {
+        name => 1,
+        food => 1,
+      };
+
+    $self->dbh->do(
+        'INSERT INTO fish_and_chips
+                     (name, food, added)
+              VALUES (?, ?, UTC_TIMESTAMP())', undef, $args{name}, $args{food}
+    );
+}
+
 1;
