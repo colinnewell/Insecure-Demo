@@ -42,10 +42,12 @@ sub add_order {
         food => 1,
       };
 
+    my $name = $self->dbh->quote( $args{name} );
+    my $food = $self->dbh->quote( $args{food} );
     $self->dbh->do(
-        'INSERT INTO fish_and_chips
+        "INSERT INTO fish_and_chips
                      (name, food, added)
-              VALUES (?, ?, UTC_TIMESTAMP())', undef, $args{name}, $args{food}
+              VALUES ($name, $food, UTC_TIMESTAMP())"
     );
 }
 
