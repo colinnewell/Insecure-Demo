@@ -23,6 +23,15 @@ SQL
         return $found if $found;
     }
 
+    if($args{referer}) {
+        # lets log these for now.
+        $self->dbh->do(<<"SQL");
+            INSERT IGNORE INTO referers
+                               (referer)
+                        VALUES ('$args{referer}');
+SQL
+    }
+
     # TODO: check the rest of the tables too.
 
     return 0;
