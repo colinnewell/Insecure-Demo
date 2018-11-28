@@ -22,8 +22,8 @@ This should bring up the database server and the web server.
 
 Now find the web address of the web server using docker inspect,
 
-    docker inspect --format 'http://{{ range .NetworkSettings.Networks}}{{ .IPAddress }}{{end}}:5000' `docker-compose ps -q dancer`
-    http://192.168.112.3:5000
+    docker inspect --format 'http://{{ range .NetworkSettings.Networks}}{{ .IPAddress }}{{end}}' `docker-compose ps -q nginx`
+    http://192.168.112.3
 
 Now browse to that address in your browser, or use curl to test it.
 
