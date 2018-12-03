@@ -3,7 +3,7 @@ FROM perl:5.28
 RUN apt-get update                                                       \
     && apt-get -y --no-install-recommends install default-libmysqlclient-dev
 
-RUN cpanm DBD::mysql@4.046
+RUN cpanm DBD::mysql
 
 ARG EXTRA_CPANM=""
 WORKDIR /opt/insecure-demo

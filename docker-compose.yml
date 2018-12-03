@@ -19,7 +19,7 @@ services:
     mysql:
         environment:
             MYSQL_RANDOM_ROOT_PASSWORD: 1
-        image: mysql/mysql-server
+        image: mysql/mysql-server:5.7
         volumes:
             - ./mysql-data:/var/lib/mysql
             - ./sql:/docker-entrypoint-initdb.d/
