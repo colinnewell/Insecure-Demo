@@ -31,6 +31,8 @@ builder {
     enable 'Session::Cookie',
       session_key => 'insecure-demo',
       expires     => 12 * 3600,         # 12 hour
+      secure      => 1,
+      httponly    => 1,
       secret      => $secret_key;
     enable 'CSRFBlock';
 

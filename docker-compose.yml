@@ -36,3 +36,5 @@ services:
             - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf
             - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
             - ./config/nginx/proxy.conf:/etc/nginx/proxy.conf
+            - ./config/nginx/insecure.demo+3.pem:/etc/nginx/insecure.demo+3.pem
+            - ./config/nginx/insecure.demo+3-key.pem:/etc/nginx/insecure.demo+3-key.pem

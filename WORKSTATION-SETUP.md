@@ -5,12 +5,26 @@ In order to make use of this you'll need Docker and Docker Compose.
 We're expecting Docker Engine version 17.06.0+ (run `docker --version`
 to check).
 
+[mkcert](https://github.com/FiloSottile/mkcert) is also a requirement to generate the ssl certificates.
+
 ## Download
 
 First clone this repository.
 
     git clone https://github.com/colinnewell/Insecure-Demo.git
     cd Insecure-Demo
+
+## Build
+
+Make sure you've installed `mkcert` and run `mkcert -install`.
+
+Run the `create_cert.sh` script to generate the ssl certificates for the
+site to allow it to run from https://insecure.demo/
+
+    ./create_cert.sh
+
+This should create the files `insecure.demo+3.pem` and `insecure.demo+3-key.pem`
+for nginx to use.
 
 ## Running
 
@@ -20,16 +34,22 @@ Now run the stack using docker-compose,
 
 This should bring up the database server and the web server.
 
-Now find the web address of the web server using docker inspect,
+Now find the ip address of the web server using docker inspect,
 
-    docker inspect --format 'http://{{ range .NetworkSettings.Networks}}{{ .IPAddress }}{{end}}' `docker-compose ps -q nginx`
-    http://192.168.112.3
+    docker inspect --format '{{ range .NetworkSettings.Networks}}{{ .IPAddress }}{{end}}' `docker-compose ps -q nginx`
+    192.168.112.3
 
-Now browse to that address in your browser, or use curl to test it.
+And add this to your /etc/hosts file
+
+    192.168.112.3   insecure.demo
+
+Now browse to https://insecure.demo in your browser, or use curl to test it.
+Note that with curl you will need to use the `--insecure` (`-k` for short) flag
+because this is a self signed certificate.
 
 Alternatively, if you're on Mac/Windows or some environment
 where you can't access the local docker ip addresses, you can
-expose the ports to the outside and access the site via http://localhost/.
+expose the ports to the outside and access the site via https://localhost/.
 
 Just remember this is an INSECURE website, which is why that's not
 the default option.  Use this command to open up to the world (or at least

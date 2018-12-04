@@ -22,7 +22,11 @@ post '/' => sub {
     my $username = $form->field('username')->value;
     my $ret      = service('Users')
       ->user_step( $username, return_url => query_parameters->get('return') );
-    cookie 'login' => $ret->{auth_cookie}, expires => "+2h";
+    cookie
+      'login'   => $ret->{auth_cookie},
+      expires   => "+2h",
+      secure    => 1,
+      http_only => 1;
     redirect '/pwd';
 };
 
@@ -56,7 +60,9 @@ post '/pwd' => sub {
         return template 'login';
     }
     cookie $retval->{token_key} => $retval->{token},
-      expires                   => $retval->{expiry};
+      expires                   => $retval->{expiry},
+      secure                    => 1,
+      http_only                 => 1;
     if ( $retval->{next} eq 'done' ) {
 
         _delete_cookies('login');

@@ -15,6 +15,9 @@ To run on your machine run with docker compose like this:
 
 This will mount the source directory so that you can run the latest code.
 
+Note that you need to create SSL certificates to make use of the nginx,
+see instructions in [WORKSTATION-SETUP.md](WORKSTATION-SETUP.md).
+
 ## More information.
 
 See [WORKSTATION-SETUP.md](WORKSTATION-SETUP.md) for getting a handle on running
