@@ -27,6 +27,16 @@ Now find the web address of the web server using docker inspect,
 
 Now browse to that address in your browser, or use curl to test it.
 
+Alternatively, if you're on Mac/Windows or some environment
+where you can't access the local docker ip addresses, you can
+expose the ports to the outside and access the site via http://localhost/.
+
+Just remember this is an INSECURE website, which is why that's not
+the default option.  Use this command to open up to the world (or at least
+your local network),
+
+    docker-compose -f docker-compose.yml -f docker-compose-open-insecure-webserver.yml up -d
+
 ## Logs
 
 To see the logs of the servers use docker-compose,
