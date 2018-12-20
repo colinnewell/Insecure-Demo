@@ -23,7 +23,8 @@ SQL
         return $found if $found;
     }
 
-    if($args{referer}) {
+    if ( $args{referer} ) {
+
         # lets log these for now.
         $self->dbh->do(<<"SQL");
             INSERT IGNORE INTO referers
