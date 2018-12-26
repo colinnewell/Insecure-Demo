@@ -1,4 +1,4 @@
-CREATE DATABASE demo;
+CREATE DATABASE demo CHARACTER SET utf8 COLLATE utf8_general_ci;
 -- create users
 -- FIXME: replace subnet with hosts?
 CREATE USER 'site'@'192.168.0.0/255.255.0.0' IDENTIFIED BY '84aaa213dbb7aa3d67d57ba49acc2a71b7c4cd8bf689bfdf4372e4a34dceeca0';

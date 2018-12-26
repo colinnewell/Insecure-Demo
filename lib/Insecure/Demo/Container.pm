@@ -6,6 +6,7 @@ our @EXPORT_OK = qw(service);
 
 use Bread::Board;
 use Cpanel::JSON::XS;
+use Crypt::Sodium;
 use DBI;
 
 my $services = container 'Services' => as {
@@ -19,6 +20,15 @@ my $services = container 'Services' => as {
         class        => 'Insecure::Demo::Service::FishAndChips',
         dependencies => {
             dbh => '/Dependencies/DBConnection',
+        },
+    );
+    service Users => (
+        class        => 'Insecure::Demo::Service::Users',
+        dependencies => {
+            cookie_key    => '/Config/cookiekey',
+            dbh           => '/Dependencies/DBConnection',
+            login_secret  => '/Config/loginsecret',
+            password_cost => '/Config/passwordcost',
         },
     );
 };
@@ -55,7 +65,10 @@ container 'Dependencies' => as {
 my $config = container 'Config' => as {};
 
 my %defaults = (
-    dbconnection           => 'dbi:SQLite::memory:',
+    dbconnection => 'dbi:SQLite::memory:',
+    loginsecret  => crypto_stream_key(),
+    cookiekey    => crypto_stream_key(),
+    passwordcost => 10,
 );
 
 my %complex_keys = ( 'dbconnection.options' => 1, );
@@ -64,11 +77,12 @@ my %complex_keys = ( 'dbconnection.options' => 1, );
 for my $key (
     qw/dbconnection dbconnection.username
     dbconnection.password dbconnection.options
+    cookiekey loginsecret passwordcost
     /
   )
 {
     my $ekey = 'INSECURE_DEMO_' . uc( $key =~ s/\./_/gr );
-    my $val = $ENV{$ekey} // $defaults{$key};
+    my $val  = $ENV{$ekey} // $defaults{$key};
     if ( $complex_keys{$key} && exists $ENV{$ekey} ) {
         $val = json_decode($val);
     }

@@ -1,0 +1,9 @@
+appname: Insecure::Demo
+charset: UTF-8
+engines:
+    template:
+        Alloy:
+            AUTO_FILTER: html
+
+layout: main
+template: alloy
