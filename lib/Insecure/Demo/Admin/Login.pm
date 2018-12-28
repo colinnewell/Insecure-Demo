@@ -20,7 +20,8 @@ post '/' => sub {
         template 'login';
     }
     my $username = $form->field('username')->value;
-    my $ret      = service('Users')->user_step($username);
+    my $ret      = service('Users')
+      ->user_step( $username, return_url => query_parameters->get('return') );
     cookie 'login' => $ret->{auth_cookie}, expires => "+2h";
     redirect '/pwd';
 };
@@ -28,11 +29,13 @@ post '/' => sub {
 any '/pwd' => sub {
     my $logins_cookie = cookies->{login};
     redirect '/' unless $logins_cookie;
-    my $user = service('Users')->get_user( $logins_cookie->value );
+    my ( $user, $return_url ) =
+      service('Users')->get_user( $logins_cookie->value );
     redirect '/' unless $user;
     my $form = Insecure::Demo::Form::Password->new;
     $form->process( defaults => { username => $user } );
-    var form => $form;
+    var form       => $form;
+    var return_url => $return_url;
     pass;
 };
 
@@ -56,8 +59,11 @@ post '/pwd' => sub {
       expires                   => $retval->{expiry};
     if ( $retval->{next} eq 'done' ) {
 
-        # FIXME: allow return url to work
         _delete_cookies('login');
+
+        if ( vars->{return_url} =~ m|^/| ) {
+            redirect 'http://' . request->host . vars->{return_url};
+        }
 
         # FIXME: this is a bit brittle using the http
         redirect 'http://' . request->host . '/admin';

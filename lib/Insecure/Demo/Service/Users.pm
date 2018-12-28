@@ -25,17 +25,17 @@ use constant { HOUR => 60 * 60, };
 # this method has the potential to allow alternative
 # auth mechanisms to be redirected to
 sub user_step {
-    my ( $self, $user ) = @_;
+    my ( $self, $user, %args ) = @_;
 
     my $nonce = crypto_stream_nonce();
 
-    # FIXME: add an expiry time
-    my $time           = time;
+    my $time = time + 2 * HOUR;
+    my $data = "user:$user:$time";
+    if ( $args{return_url} ) {
+        $data .= ':return_url:' . $args{return_url};
+    }
     my $encrypted_data = encode_base64(
-        $nonce
-          . crypto_secretbox( "user:$user:$time", $nonce, $self->login_secret ),
-        ''
-    );
+        $nonce . crypto_secretbox( $data, $nonce, $self->login_secret ), '' );
     return { auth_cookie => $encrypted_data, next => 'pwd' };
 }
 
@@ -46,10 +46,10 @@ sub get_user {
     my $nonce = substr( $bin, 0, crypto_secretbox_NONCEBYTES );
     my $ct    = substr( $bin, crypto_secretbox_NONCEBYTES );
     my $user  = crypto_secretbox_open( $ct, $nonce, $self->login_secret );
-    if ( $user && $user =~ /^user:(.*):(\d+)$/ ) {
-
-        # FIXME: check expiry
-        return $1;
+    if ( $user && $user =~ /^user:(.*):(\d+)(?::return_url:(.*))?$/ ) {
+        if ( $2 > time ) {
+            return ( $1, $3 );
+        }
     }
     return;
 }

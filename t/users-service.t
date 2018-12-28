@@ -11,16 +11,21 @@ my $db = mock {}, add => [
 ];
 
 my $users = Insecure::Demo::Service::Users->new(
-    cookie_key => 'fake',
+    cookie_key    => 'fake',
     dbh           => $db,
     login_secret  => crypto_stream_key(),
     password_cost => 10,
 );
 my $ret = $users->user_step('username1');
-is $users->get_user( $ret->{auth_cookie} ), 'username1';
+my ($user) = $users->get_user( $ret->{auth_cookie} );
+is $user, 'username1';
+
+$ret = $users->user_step( 'username1', return_url => '/admin/test' );
+( $user, my $return_url ) = $users->get_user( $ret->{auth_cookie} );
+is $user,       'username1';
+is $return_url, '/admin/test';
 
 $password_hash = $users->_hash('password');
-diag $password_hash;
 
 $ret = $users->user_valid( 'testuser', 'password' );
 is $ret->{next}, 'done';
