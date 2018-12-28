@@ -37,6 +37,12 @@ your local network),
 
     docker-compose -f docker-compose.yml -f docker-compose-open-insecure-webserver.yml up -d
 
+## Adding an Admin user
+
+To add an admin user use the add-user.pl script.
+
+    docker-compose run dancer perl -I /opt/insecure-demo/lib bin/add-user.pl username password
+
 ## Logs
 
 To see the logs of the servers use docker-compose,

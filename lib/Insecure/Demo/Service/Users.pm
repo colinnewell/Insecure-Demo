@@ -111,6 +111,13 @@ sub get_user_id {
     return;
 }
 
+sub add_user {
+    my ( $self, $user, $password ) = @_;
+
+    $self->dbh->do( 'INSERT INTO users (username, password) VALUES (?, ?);',
+        undef, $user, $self->_hash($password) );
+}
+
 sub _login_token {
     my ( $self, $id, %args ) = @_;
 
