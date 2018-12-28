@@ -80,8 +80,8 @@ sub user_valid {
         }
 
         if ( $next eq 'done' ) {
-            $token_key = 'login';
-            $expiry    = '8 hours';
+            $token_key = 'user';
+            $expiry    = '+8h';
         }
 
         return {

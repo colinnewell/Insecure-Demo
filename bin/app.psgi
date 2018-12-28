@@ -8,6 +8,7 @@ use warnings;
 use Plack::Builder;
 use Insecure::Demo;
 use Insecure::Demo::Admin;
+use Insecure::Demo::Admin::Login;
 
 my $secret_key = $ENV{INSECURE_DEMO_SECRET};
 unless ($secret_key) {
@@ -27,7 +28,11 @@ builder {
     enable 'CSRFBlock';
 
     # FIXME: load middleware to ensure logged in
-    mount '/admin' => Insecure::Demo::Admin->to_app;
+    mount '/admin/login' => Insecure::Demo::Admin::Login->to_app;
+    mount '/admin' => builder {
+        enable '+Insecure::Demo::Middleware::Admin';
+        mount '/' => Insecure::Demo::Admin->to_app;
+    };
     mount '/'      => Insecure::Demo->to_app;
 }
 
