@@ -13,5 +13,6 @@ matrix:
       after_success: cover -report coveralls -select_re ^lib/
 
 before_install:
+  - sudo apt-get update
   - sudo apt-get install -y libu2f-server-dev libsodium-dev
   - eval $(curl https://travis-perl.github.io/init) --auto
