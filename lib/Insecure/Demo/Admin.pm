@@ -41,12 +41,13 @@ post '/fish-and-chips/edit/:id' => sub {
         my $user_details = service('Users')->user_details($user_id);
         die 'Unable to find user ' . $user_id unless $user_details;
 
-        service('FishAndChips')->edit_order(
-            id   => body_parameters->get('id'),
-            name => $user_details->{username},
+        my %data = (
+            id   => route_parameters->get('id'),
+            name => $user_details->{APP_NAME},
             food => body_parameters->get('food'),
         );
-        $message = { success => 1 };
+        service('FishAndChips')->edit_order(%data);
+        $message = { success => 1, %data };
     };
     if ($@) {
         warn $@;

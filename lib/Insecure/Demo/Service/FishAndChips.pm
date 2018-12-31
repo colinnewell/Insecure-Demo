@@ -51,4 +51,15 @@ sub add_order {
     );
 }
 
+sub edit_order {
+    my ( $self, %args ) = @_;
+
+    $self->dbh->do(
+        'UPDATE fish_and_chips
+            SET name = ?,
+                food = ?
+          WHERE id = ?;', undef, $args{name}, $args{food}, $args{id}
+    );
+}
+
 1;
