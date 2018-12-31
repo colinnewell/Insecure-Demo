@@ -37,6 +37,19 @@ your local network),
 
     docker-compose -f docker-compose.yml -f docker-compose-open-insecure-webserver.yml up -d
 
+## Static secrets
+
+The application needs various secrets in order to run.  The CSRF tokens and
+various login cookies all require these.  Out of the box the application will
+generate these on startup.  This means that whenever the app is restarted
+existing cookies will become invalid requiring re-logging in.
+
+To avoid the secrets being regenerated every time the app starts there is a script
+to provide those secrets via environment variables via a
+docker-compose.override.yml.
+
+    bin/generate-config.pl
+
 ## Adding an Admin user
 
 To add an admin user use the add-user.pl script.
