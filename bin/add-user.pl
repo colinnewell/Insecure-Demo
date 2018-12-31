@@ -5,4 +5,4 @@
 use strictures 2;
 use Insecure::Demo::Container 'service';
 
-service('Users')->add_user(shift, shift);
+service('Users')->add_user(@ARGV);

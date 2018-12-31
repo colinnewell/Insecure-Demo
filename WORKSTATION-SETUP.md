@@ -41,7 +41,7 @@ your local network),
 
 To add an admin user use the add-user.pl script.
 
-    docker-compose run dancer perl -I /opt/insecure-demo/lib bin/add-user.pl username password
+    docker-compose run dancer perl -I /opt/insecure-demo/lib bin/add-user.pl "name" username password
 
 ## Logs
 

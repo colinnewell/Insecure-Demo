@@ -111,11 +111,27 @@ sub get_user_id {
     return;
 }
 
-sub add_user {
-    my ( $self, $user, $password ) = @_;
+sub user_details {
+    my ( $self, $id ) = @_;
 
-    $self->dbh->do( 'INSERT INTO users (username, password) VALUES (?, ?);',
-        undef, $user, $self->_hash($password) );
+    return unless $id =~ /\d+/ && $id > 0 && $id < 1000;
+
+    my $users = $self->dbh->selectall_arrayref( "
+        SELECT id       AS APP_ID,
+               name     AS APP_NAME,
+               username AS APP_USERNAME
+        FROM users
+        WHERE id = $id", { Slice => {} } );
+
+    return unless $users;
+    return $users->[0];
+}
+
+sub add_user {
+    my ( $self, $name, $user, $password ) = @_;
+
+    $self->dbh->do( 'INSERT INTO users (name, username, password) VALUES (?, ?, ?);',
+        undef, $name, $user, $self->_hash($password) );
 }
 
 sub _login_token {

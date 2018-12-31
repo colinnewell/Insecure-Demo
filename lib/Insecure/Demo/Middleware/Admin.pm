@@ -22,6 +22,13 @@ sub call {
     return _redirect( '/admin/login/?return=' . uri_escape $env->{REQUEST_URI} )
       unless $user_id;
 
+    my $user_info = service('Users')->user_details($user_id);
+
+    return _redirect( '/admin/login/?return=' . uri_escape $env->{REQUEST_URI} )
+      unless $user_info;
+
+    $env->{$_} = $user_info->{$_} for keys %$user_info;
+
     return $self->app->($env);
 }
 
