@@ -1,4 +1,7 @@
 #!/usr/bin/env perl
+
+# PODNAME: generate-config.pl
+
 use strictures 2;
 
 use Crypt::Sodium;
