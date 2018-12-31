@@ -1,10 +1,11 @@
+<script src="/js/fish-and-chips.js"></script>
 <table class="orders">
     <tr>
         <th>Name</th>
         <th>Order</th>
     </tr>
     [% FOR order IN orders %]
-    <tr data-id="[% order.id %]">
+    <tr class="line" data-id="[% order.id %]">
         <td>[% order.name %]</td>
         <td>[% order.food | html_line_break %]</td>
     </tr>

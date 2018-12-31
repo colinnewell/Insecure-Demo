@@ -18,7 +18,7 @@ sub orders {
 
     my $sqla = SQL::Abstract::More->new;
     my ( $sql, @bind ) = $sqla->select(
-        -columns  => [ 'name', 'food', 'added' ],
+        -columns  => [ 'id', 'name', 'food', 'added' ],
         -from     => ['fish_and_chips'],
         -order_by => [ $args{order_by} || 'id' ],
         -where    => {
