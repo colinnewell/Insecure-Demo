@@ -11,7 +11,6 @@
     [% END %]
 </table>
 <form method="POST">
-    <input type="text" name="name">
     <textarea name="food"></textarea>
     <input type="submit" value="Order">
 </form>

@@ -20,7 +20,7 @@ get '/fish-and-chips' => sub {
 post '/fish-and-chips' => sub {
     eval {
         my $order = service('FishAndChips')->add_order(
-            name => body_parameters->get('name'),
+            name => request->env->{APP_NAME},
             food => body_parameters->get('food'),
         );
     };
@@ -29,7 +29,7 @@ post '/fish-and-chips' => sub {
         # FIXME: do something about this.
         warn $@;
     }
-    redirect request->uri;
+    redirect 'fish-and-chips';
 };
 
 1;
