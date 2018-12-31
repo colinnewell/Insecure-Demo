@@ -13,13 +13,14 @@ get '/fish-and-chips' => sub {
         offset   => query_parameters->get('offset'),
         order_by => query_parameters->get('order_by'),
     );
+    my $users = service('Users')->user_list;
     template 'fish-and-chips',
-      { title => 'Fish and Chips', orders => $order_data };
+      { title => 'Fish and Chips', orders => $order_data, users => $users };
 };
 
 post '/fish-and-chips' => sub {
     eval {
-        my $order = service('FishAndChips')->add_order(
+        service('FishAndChips')->add_order(
             name => request->env->{APP_NAME},
             food => body_parameters->get('food'),
         );
@@ -34,14 +35,13 @@ post '/fish-and-chips' => sub {
 
 post '/fish-and-chips/edit/:id' => sub {
     my $message = {};
-    my $srv     = service('FishAndChips');
     eval {
         my $user_id = body_parameters->get('user_id');
 
-        my $user_details = $srv->user_details($user_id);
+        my $user_details = service('Users')->user_details($user_id);
         die 'Unable to find user ' . $user_id unless $user_details;
 
-        my $order =->edit_order(
+        service('FishAndChips')->edit_order(
             id   => body_parameters->get('id'),
             name => $user_details->{username},
             food => body_parameters->get('food'),

@@ -1,10 +1,10 @@
-<table>
+<table class="orders">
     <tr>
         <th>Name</th>
         <th>Order</th>
     </tr>
     [% FOR order IN orders %]
-    <tr>
+    <tr data-id="[% order.id %]">
         <td>[% order.name %]</td>
         <td>[% order.food | html_line_break %]</td>
     </tr>
@@ -14,3 +14,18 @@
     <textarea name="food"></textarea>
     <input type="submit" value="Order">
 </form>
+<div class="dialog">
+    <form method="POST">
+        <label for="food">Order</label>
+        <textarea id="food" name="food"></textarea>
+
+        <label for="user_id">User</label>
+        <select id="user_id" name="user_id>
+            [% FOR user IN users %]
+            <option value="[% user.id %]">[% user.name %]</option>
+            [% END %]
+        </select>
+
+        <input type="submit" value="Save">
+    </form>
+</div>

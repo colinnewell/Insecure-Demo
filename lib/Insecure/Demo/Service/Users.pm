@@ -134,6 +134,12 @@ sub add_user {
         undef, $name, $user, $self->_hash($password) );
 }
 
+sub user_list {
+    my $self = shift;
+
+    return $self->dbh->selectall_arrayref('SELECT id, name FROM users', { Slice => {}});
+}
+
 sub _login_token {
     my ( $self, $id, %args ) = @_;
 
