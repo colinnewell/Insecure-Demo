@@ -32,4 +32,27 @@ post '/fish-and-chips' => sub {
     redirect 'fish-and-chips';
 };
 
+post '/fish-and-chips/edit/:id' => sub {
+    my $message = {};
+    my $srv     = service('FishAndChips');
+    eval {
+        my $user_id = body_parameters->get('user_id');
+
+        my $user_details = $srv->user_details($user_id);
+        die 'Unable to find user ' . $user_id unless $user_details;
+
+        my $order =->edit_order(
+            id   => body_parameters->get('id'),
+            name => $user_details->{username},
+            food => body_parameters->get('food'),
+        );
+        $message = { success => 1 };
+    };
+    if ($@) {
+        warn $@;
+        $message = { fail => 1 };
+    }
+    send_as JSON => $message;
+};
+
 1;
