@@ -58,3 +58,4 @@ tags
 local/
 mysql-data/
 *.bak
+docker-compose.override.yml

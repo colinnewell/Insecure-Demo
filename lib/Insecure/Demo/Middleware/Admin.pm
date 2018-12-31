@@ -28,6 +28,7 @@ sub call {
       unless $user_info;
 
     $env->{$_} = $user_info->{$_} for keys %$user_info;
+    # FIXME: lets push out a username to the nginx log
 
     return $self->app->($env);
 }

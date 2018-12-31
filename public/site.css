@@ -1,3 +1,5 @@
 div.dialog {
     display: none;
 }
+
+label, input { display:block; }

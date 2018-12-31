@@ -71,7 +71,8 @@ my %defaults = (
     passwordcost => 10,
 );
 
-my %complex_keys = ( 'dbconnection.options' => 1, );
+my %binary_keys = ( cookiekey => 1, loginsecret => 1 );
+my %complex_keys = ( 'dbconnection.options' => 1 );
 
 # Look for config in env or use the defaults above.
 for my $key (
@@ -85,6 +86,9 @@ for my $key (
     my $val  = $ENV{$ekey} // $defaults{$key};
     if ( $complex_keys{$key} && exists $ENV{$ekey} ) {
         $val = json_decode($val);
+    }
+    elsif ( $binary_keys{$key} && exists $ENV{$ekey} ) {
+        $val = pack 'H*', $val;
     }
     $config->add_service( service $key => $val );
 }

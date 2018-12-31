@@ -6,8 +6,8 @@
     </tr>
     [% FOR order IN orders %]
     <tr class="line" data-id="[% order.id %]">
-        <td>[% order.name %]</td>
-        <td>[% order.food | html_line_break %]</td>
+        <td class="name">[% order.name %]</td>
+        <td class="food">[% order.food | html_line_break %]</td>
     </tr>
     [% END %]
 </table>
@@ -21,12 +21,10 @@
         <textarea id="food" name="food"></textarea>
 
         <label for="user_id">User</label>
-        <select id="user_id" name="user_id>
+        <select id="user_id" name="user_id">
             [% FOR user IN users %]
             <option value="[% user.id %]">[% user.name %]</option>
             [% END %]
         </select>
-
-        <input type="submit" value="Save">
     </form>
 </div>
