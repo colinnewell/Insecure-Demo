@@ -34,6 +34,8 @@ on 'test' => sub {
     requires "ExtUtils::MakeMaker" => "0";
     requires "File::Spec"          => "0";
     requires "Test2::V0"           => "0";
+    requires "Test::DBIx::Class"   => "0";
+    requires "Test::mysqld"        => "0";
 };
 
 on 'test' => sub {
