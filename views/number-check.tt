@@ -1,0 +1,8 @@
+<h1>Phone number check</h1>
+<form method="POST">
+<label>Number: <input type="text" required name="number" value="[% number %]"></label>
+<input type="submit" value="Check">
+</form>
+[% IF office %]
+Belongs to the [% office.name %] office.
+[% END %]

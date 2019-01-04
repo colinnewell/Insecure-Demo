@@ -8,6 +8,7 @@ use Bread::Board;
 use Cpanel::JSON::XS;
 use Crypt::Sodium;
 use DBI;
+use Insecure::Demo::Schema;
 
 my $services = container 'Services' => as {
     service BannedUsers => (
@@ -30,6 +31,28 @@ my $services = container 'Services' => as {
             login_secret  => '/Config/loginsecret',
             password_cost => '/Config/passwordcost',
         },
+    );
+    service DBIC => (
+        block => sub {
+            my $s = shift;
+            return Insecure::Demo::Schema->connect(
+                $s->param('connection_string'),
+                $s->param('username'),
+                $s->param('password'),
+                {
+                    RaiseError => 1,
+                    AutoCommit => 1,
+                    %{ $s->param('options') // {} }
+                },
+            );
+        },
+        dependencies => {
+            connection_string => '/Config/dbconnection',
+            username          => '/Config/dbconnection.username',
+            password          => '/Config/dbconnection.password',
+            options           => '/Config/dbconnection.options',
+        },
+        lifecycle => 'Singleton',
     );
 };
 

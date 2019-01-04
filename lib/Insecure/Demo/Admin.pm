@@ -56,4 +56,15 @@ post '/fish-and-chips/edit/:id' => sub {
     send_as JSON => $message;
 };
 
+get '/number-check' => sub {
+    template 'number-check';
+};
+
+post '/number-check' => sub {
+    my $number = body_parameters->get('number');
+    my $office =
+      service('DBIC')->resultset('OfficeNumbers')->office_lookup($number);
+    template 'number-check' => { number => $number, office => $office->first };
+};
+
 1;

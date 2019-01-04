@@ -9,7 +9,10 @@ sub office_lookup {
     my ( $self, $phone_number ) = @_;
 
     return $self->search(
-        { "'$phone_number'" => { -like => \'concat("%", number_prefix, "%")' } }
+        {
+            "'$phone_number'" => { -like => \'concat("%", number_prefix, "%")' }
+        },
+        { order_by => \'length(number_prefix)' }
     );
 }
 
