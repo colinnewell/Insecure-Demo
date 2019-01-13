@@ -5,6 +5,10 @@ use Insecure::Demo::Container 'service';
 
 use DateTime;
 
+get '/' => sub {
+    template 'admin';
+};
+
 get '/fish-and-chips' => sub {
     my $date = query_parameters->get('date') || DateTime->today->ymd;
     my $order_data = service('FishAndChips')->orders(
