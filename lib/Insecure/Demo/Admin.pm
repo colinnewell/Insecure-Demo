@@ -25,7 +25,7 @@ get '/fish-and-chips' => sub {
 post '/fish-and-chips' => sub {
     eval {
         service('FishAndChips')->add_order(
-            name => request->env->{APP_NAME},
+            name => request->env->{ID_NAME},
             food => body_parameters->get('food'),
         );
     };
@@ -47,7 +47,7 @@ post '/fish-and-chips/edit/:id' => sub {
 
         my %data = (
             id   => route_parameters->get('id'),
-            name => $user_details->{APP_NAME},
+            name => $user_details->{ID_NAME},
             food => body_parameters->get('food'),
         );
         service('FishAndChips')->edit_order(%data);
@@ -69,6 +69,11 @@ post '/number-check' => sub {
     my $office =
       service('DBIC')->resultset('OfficeNumbers')->office_lookup($number);
     template 'number-check' => { number => $number, office => $office->first };
+};
+
+get '/users' => sub {
+    return status 403 unless request->env->{ID_ADMIN};
+    template 'users' => { users => service('Users')->user_list };
 };
 
 1;

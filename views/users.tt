@@ -1,0 +1,6 @@
+<h1>Users</h1>
+<p>
+[% FOR user IN users %]
+    <li>[% user.username %] - [% user.name %]</li>
+[% END %]
+</p>

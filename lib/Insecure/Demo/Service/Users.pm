@@ -117,9 +117,10 @@ sub user_details {
     return unless $id =~ /\d+/ && $id > 0 && $id < 1000;
 
     my $users = $self->dbh->selectall_arrayref( "
-        SELECT id       AS APP_ID,
-               name     AS APP_NAME,
-               username AS APP_USERNAME
+        SELECT id       AS ID_ID,
+               name     AS ID_NAME,
+               username AS ID_USERNAME,
+               admin    AS ID_ADMIN
         FROM users
         WHERE id = $id", { Slice => {} } );
 
@@ -130,14 +131,19 @@ sub user_details {
 sub add_user {
     my ( $self, $name, $user, $password ) = @_;
 
-    $self->dbh->do( 'INSERT INTO users (name, username, password) VALUES (?, ?, ?);',
+    $self->dbh->do(
+        'INSERT INTO users (name, username, password) VALUES (?, ?, ?);',
         undef, $name, $user, $self->_hash($password) );
 }
 
 sub user_list {
     my $self = shift;
 
-    return $self->dbh->selectall_arrayref('SELECT id, name FROM users', { Slice => {}});
+    return $self->dbh->selectall_arrayref(
+        'SELECT id, name, username
+        FROM users
+        ORDER BY name', { Slice => {} }
+    );
 }
 
 sub _login_token {
