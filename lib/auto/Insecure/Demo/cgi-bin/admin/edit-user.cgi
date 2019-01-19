@@ -46,8 +46,10 @@ sub display_user {
     my ( $query, $user ) = @_;
 
     print $query->header();
-    my $name    = encode_entities( $query->param('name') // $user->{ID_NAME} );
-    my $user_id = $user->{ID_ID};
+    my $name = encode_entities( $query->param('name') // $user->{ID_NAME} );
+    my $username =
+      encode_entities( $query->param('username') // $user->{ID_USERNAME} );
+    my $user_id       = $user->{ID_ID};
     my $saved_message = '';
     if ( $query->param('saved') ) {
         $saved_message = '<p>Saved</p>';
@@ -59,6 +61,7 @@ sub display_user {
     $saved_message
     <form method="POST">
         <label>Name<input type="text" name="name" value="$name"></label>
+        <label>Username<input type="text" name="username" value="$username"></label>
         <input type="hidden" name="user_id" value="$user_id">
         <input type="submit" name="updateuser" value="Save">
     </form>
@@ -70,9 +73,10 @@ HTML
 sub update_user {
     my ( $query, $user ) = @_;
     service('Users')->edit_user(
-        id    => $user->{ID_ID},
-        admin => $user->{ID_ADMIN},
-        name  => $query->param('name') || ''
+        id       => $user->{ID_ID},
+        admin    => $user->{ID_ADMIN},
+        name     => $query->param('name') || '',
+        username => $query->param('username'),
     );
 
     print $query->redirect(

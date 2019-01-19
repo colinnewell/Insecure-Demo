@@ -141,9 +141,9 @@ sub edit_user {
 
     $self->dbh->do(
         'UPDATE users
-            SET name = ?, admin = ?
+            SET name = ?, admin = ?, username = ?
           WHERE id = ?',
-        undef, $args{name}, $args{admin}, $args{id}
+        undef, $args{name}, $args{admin}, $args{username}, $args{id}
     );
 }
 
