@@ -37,6 +37,21 @@ your local network),
 
     docker-compose -f docker-compose.yml -f docker-compose-open-insecure-webserver.yml up -d
 
+## Updating to a new version
+
+Note that the docker-compose environment mounts the current git repo and
+runs the code from that, rather than the docker container out of the box.
+This means that you ideally want to keep the git repo and docker containers
+in sync.
+
+    git pull
+    docker-compose pull
+
+If there are database changes you will need to re-create the database or
+manually apply the database changes yourself.  See
+[DEVELOPING.md](DEVELOPING.md#Database-updates) for how to deal with database
+updates.
+
 ## Static secrets
 
 The application needs various secrets in order to run.  The CSRF tokens and
@@ -62,16 +77,6 @@ To see the logs of the servers use docker-compose,
 
     docker-compose logs mysql
     docker-compose logs -f dancer # -f keeps watching the logs for new things
-
-## Changing the code
-
-The source code in the repo is mounted into the container so
-that you can experiment with modifying it.  If you do modify the code
-you can restart the web server to test it's effect.
-
-    docker-compose restart dancer
-
-Note that template changes shouldn't require a restart.
 
 ## Connecting to the database
 
