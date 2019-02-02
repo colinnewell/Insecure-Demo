@@ -18,7 +18,7 @@ so that you can test everything locally.
 ### Hints
 
 * Check the logs
-* Log more things - see [Environment variables](DEVELOPING.md#environment-variables]
+* Log more things - see [Environment variables](DEVELOPING.md#environment-variables)
   in the development guide
 * The things that look most obviously broken may not be the simplest things to exploit
 * The Fish and Chips feature is good place to start.
