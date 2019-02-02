@@ -49,7 +49,7 @@ in sync.
 
 If there are database changes you will need to re-create the database or
 manually apply the database changes yourself.  See
-[DEVELOPING.md](DEVELOPING.md#Database-updates) for how to deal with database
+[DEVELOPING.md](DEVELOPING.md#database-updates) for how to deal with database
 updates.
 
 ## Static secrets

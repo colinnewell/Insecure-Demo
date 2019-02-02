@@ -10,7 +10,7 @@ you can restart the web server to test it's effect.
 
 Note that template changes shouldn't require a restart.
 
-See the note about [Static secrets](WORKSTATION-SETUP.md#Static-secrets) for
+See the note about [Static secrets](WORKSTATION-SETUP.md#static-secrets) for
 a note on why restarting the app out of the box invalidates existing logins
 and CSRF tokens.
 
