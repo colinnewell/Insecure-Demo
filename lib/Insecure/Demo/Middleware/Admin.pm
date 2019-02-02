@@ -28,9 +28,13 @@ sub call {
       unless $user_info;
 
     $env->{$_} = $user_info->{$_} for keys %$user_info;
-    # FIXME: lets push out a username to the nginx log
 
-    return $self->app->($env);
+    return Plack::Util::response_cb(
+        $self->app->($env),
+        sub {
+            push @{ $_[0][1] }, 'X-User', "admin/$user_info->{ID_USERNAME}";
+        },
+    );
 }
 
 sub _redirect { [ 302, [ Location => $_[0] ], [] ] }
