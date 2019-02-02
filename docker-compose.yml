@@ -31,3 +31,4 @@ services:
         volumes:
             - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf
             - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+            - ./config/nginx/proxy.conf:/etc/nginx/proxy.conf
