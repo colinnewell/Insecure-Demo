@@ -23,3 +23,6 @@ development and debugging.
 
 The [SCENARIOS.md](SCENARIOS.md) file contains ideas for things to do with
 this site.
+
+If you want more information on the security problems presented on this site
+take a look at [READING-LIST.md](READING-LIST.md).
