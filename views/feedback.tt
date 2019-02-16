@@ -1,0 +1,9 @@
+<h1>Feedback - Insecure Co Systems</h1>
+
+<p>Provide your feedback on our wonderful system</p>
+
+<form method="POST">
+    <label>Name:<input required=required type="text" name="name" value="[% name %]"></label>[% IF required.name %]<span class="error">Required</span>[% END %]
+    <label>Comments<textarea required=required name="comments" value="[% comments %]"></textarea></label>[% IF required.comments %]<span class="error">Required</span>[% END %]
+    <input type="submit" value="Send">
+</form>

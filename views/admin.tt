@@ -5,6 +5,7 @@
 <li><a href="/admin/number-check">Phone numbers</a></li>
 [% IF request.env.ID_ADMIN %]
 <li><a href="/admin/users">Users</a></li>
+<li><a href="/admin/cgi-bin/view-feedback.cgi">Feedback</a></li>
 [% END %]
 <li><a href="/admin/cgi-bin/edit-user.cgi?user_id=[% request.env.ID_ID %]">Edit User</a></li>
 </ul>

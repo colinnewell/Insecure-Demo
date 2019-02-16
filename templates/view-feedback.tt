@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>[% title %]</title>
+    <link rel="stylesheet" href="/site.css">
+    <link rel="stylesheet" href="/ext/jquery-ui-1.12.1/jquery-ui.min.css">
+    <script src="/ext/jquery-3.3.1.min.js"></script>
+    <script src="/ext/jquery-ui-1.12.1/jquery-ui.min.js"></script>
+  </head>
+  <body>
+
+<h1>Insecure Co Systems</h1>
+<p>This is the feedback we've received</p>
+<table>
+    <tr>
+        <th>Created</th>
+        <th>IP</th>
+        <th>Name</th>
+        <th>Comments</th>
+    </tr>
+    [% FOR row IN feedback %]
+    <tr>
+        <td>[% row.created %]</td>
+        <td>[% row.ip %]</td>
+        <td>[% row.name %]</td>
+        <td>[% row.comments %]</td>
+    </tr>
+    [% END %]
+<table>
+
+  </body>
+</html>

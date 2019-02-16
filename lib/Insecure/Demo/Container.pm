@@ -17,6 +17,12 @@ my $services = container 'Services' => as {
             dbh => '/Dependencies/DBConnection',
         },
     );
+    service Feedback => (
+        class        => 'Insecure::Demo::Service::Feedback',
+        dependencies => {
+            dbh => '/Dependencies/DBConnection',
+        },
+    );
     service FishAndChips => (
         class        => 'Insecure::Demo::Service::FishAndChips',
         dependencies => {
