@@ -12,7 +12,6 @@ $(function() {
             'Save': function() {
                 // grab the info
                 $.post('/admin/fish-and-chips/edit/' + id, $('.dialog form').serializeArray(), function(data) {
-                    console.log(data);
                     if(data.success) {
                         // update the ui
                         $row.find('.food').text(data.food);
