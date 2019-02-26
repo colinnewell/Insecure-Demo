@@ -2,7 +2,7 @@
 
 In order to make use of this you'll need Docker and Docker Compose.
 
-We're expecting Docker Engine version 17.06.0+ (run `docker --version` 
+We're expecting Docker Engine version 17.06.0+ (run `docker --version`
 to check).
 
 ## Download
@@ -63,13 +63,31 @@ To avoid the secrets being regenerated every time the app starts there is a scri
 to provide those secrets via environment variables via a
 docker-compose.override.yml.
 
+Note that this script will require the Crypt::Sodium module to be installed
+locally.  This will require the libsodium-dev package to be installed on debian
+based distributions.
+
     bin/generate-config.pl
+
+Now the docker-compose.override.yml is there when you should restart the environment
+using
+
+    docker-compose up -d
+
+Now when you restart the application sessions and XSRF tokens won't be invalidated.
+
+    docker-compose restart dancer
 
 ## Adding an Admin user
 
-To add an admin user use the add-user.pl script.
+To add an admin user use the add-user.pl script.  Replace username/password and name
+with the details you want.
 
     docker-compose run dancer perl -I /opt/insecure-demo/lib bin/add-user.pl "name" username password
+
+Now you can log into to the admin part of the system.  Note that there is also
+an admin flag that users can have.  To set that you'll need to do that manually using SQL
+(see below for connecting to the database manually).
 
 ## Logs
 
@@ -78,9 +96,13 @@ To see the logs of the servers use docker-compose,
     docker-compose logs mysql
     docker-compose logs -f dancer # -f keeps watching the logs for new things
 
+Or if you want to see all the logs don't specfiy a machine,
+
+    docker-compose logs -f
+
 ## Connecting to the database
 
-The root password for the database is generated when the server is 
+The root password for the database is generated when the server is
 initially started.  You can find it in the logs.
 
     docker-compose logs mysql | grep GENERATED
