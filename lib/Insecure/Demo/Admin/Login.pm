@@ -71,7 +71,6 @@ post '/pwd' => sub {
             redirect 'http://' . request->host . vars->{return_url};
         }
 
-        # FIXME: this is a bit brittle using the http
         redirect 'http://' . request->host . '/admin';
     }
     else {
@@ -79,10 +78,69 @@ post '/pwd' => sub {
     }
 };
 
+any '/u2f' => sub {
+    my $user_id;
+    my $token = cookies->{userid};
+    my $srv   = service('Users');
+    $user_id = $srv->get_user_id($token) if $token;
+    redirect '/' unless $user_id;
+    var user_id => $user_id;
+    var srv     => $srv;
+    pass;
+};
+
 get '/u2f' => sub {
+    my $user_id = vars->{user_id};
+
+    my $auth = vars->{srv}->get_u2f_auth_challenge( user_id => $user_id, );
+    template 'u2f-auth',
+      {
+        app_id    => $auth->{challenge}{appId},
+        challenge => $auth->{challenge}{challenge},
+        keys      => [
+            {
+                keyHandle => $auth->{challenge}{keyHandle},
+                version   => $auth->{challenge}{version}
+            }
+        ],
+      };
 };
 
 post '/u2f' => sub {
+    my $user_id = vars->{user_id};
+
+    my $data = eval { decode_json body_parameters->get('u2f_data') };
+    warn $@ if $@;
+    status 400 unless $data;
+
+    # FIXME: do I need to authenticate that the challenge came from us?
+    if (
+        vars->{srv}->u2f_valid(
+            auth_response => $data,
+            user_id       => $user_id,
+            challenge     => body_parameters->get('challenge')
+        )
+      )
+    {
+        # set login cookie
+        cookie
+          'user' =>
+          vars->{srv}->_login_token( $user_id, expiry_time => 8 * 60 * 60 ),
+          expires   => '+8h',
+          secure    => 1,
+          http_only => 1;
+
+        _delete_cookies( 'login', 'userid' );
+
+        if ( vars->{return_url} =~ m|^/| ) {
+            redirect 'http://' . request->host . vars->{return_url};
+        }
+
+        redirect 'http://' . request->host . '/admin';
+    }
+
+    # FIXME: figure out a proper failure thing
+    redirect '/';
 };
 
 sub _delete_cookies {

@@ -5,7 +5,7 @@ use Insecure::Demo::Container 'service';
 
 # ABSTRACT: demonstration application with security issues
 
-our $VERSION = '0.001';
+our $VERSION = '0.004';
 
 any '/' => sub {
 

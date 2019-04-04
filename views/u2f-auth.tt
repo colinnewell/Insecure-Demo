@@ -1,0 +1,27 @@
+[% vars.js = BLOCK -%]
+    <script src="/ext/u2f-api.js"></script>
+[%- END %]
+<h1>Verify your identity with your U2F key</h1>
+<p>Insert your key and press the button.</p>
+<form id="u2f_form" method="post">
+  <input type="hidden" name="challenge" value="[% challenge %]">
+  <input type="hidden" name="u2f_data" id="u2f_data">
+</form>
+<script type="text/javascript">
+    u2f.sign([% app_id.json | none %], [% challenge.json | none %], [% keys.json | none %], function(resp) {
+        console.log(resp);
+        if(resp.errorCode) {
+            if(resp.errorCode === 4) {
+                alert('Wrong key');
+            } else if(resp.errorCode === 5) {
+                alert('Timed out');
+                // FIXME: put in a method to retry.
+            } else {
+                alert('Error: ' + resp.errorCode);
+            }
+        } else {
+            document.getElementById('u2f_data').value = JSON.stringify(resp);
+            document.getElementById('u2f_form').submit();
+        }
+    });
+</script>

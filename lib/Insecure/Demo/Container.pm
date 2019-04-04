@@ -7,6 +7,7 @@ our @EXPORT_OK = qw(service);
 use Bread::Board;
 use Cpanel::JSON::XS;
 use Crypt::Sodium;
+use Crypt::U2F::Server::Simple;
 use DBI;
 use Insecure::Demo::Schema;
 
@@ -36,6 +37,7 @@ my $services = container 'Services' => as {
             dbh           => '/Dependencies/DBConnection',
             login_secret  => '/Config/loginsecret',
             password_cost => '/Config/passwordcost',
+            u2f           => '/Dependencies/U2F',
         },
     );
     service DBIC => (
@@ -65,7 +67,6 @@ my $services = container 'Services' => as {
 Bread::Board::set_root_container($services);
 
 container 'Dependencies' => as {
-
     service DBConnection => (
         block => sub {
             my $s = shift;
@@ -88,7 +89,18 @@ container 'Dependencies' => as {
         },
         lifecycle => 'Singleton',
     );
-
+    service U2F => (
+        block => sub {
+            my $s = shift;
+            Crypt::U2F::Server::Simple->new(
+                appId  => $s->param('origin'),
+                origin => $s->param('origin'),
+            );
+        },
+        dependencies => {
+            origin => '/Config/origin',
+        },
+    );
 };
 
 my $config = container 'Config' => as {};
@@ -98,6 +110,7 @@ my %defaults = (
     loginsecret  => crypto_stream_key(),
     cookiekey    => crypto_stream_key(),
     passwordcost => 10,
+    origin       => 'https://insecure.demo',
 );
 
 my %binary_keys = ( cookiekey => 1, loginsecret => 1 );
@@ -107,7 +120,7 @@ my %complex_keys = ( 'dbconnection.options' => 1 );
 for my $key (
     qw/dbconnection dbconnection.username
     dbconnection.password dbconnection.options
-    cookiekey loginsecret passwordcost
+    cookiekey loginsecret passwordcost origin
     /
   )
 {

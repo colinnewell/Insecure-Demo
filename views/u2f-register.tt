@@ -1,0 +1,32 @@
+[% vars.js = BLOCK -%]
+    <script src="/ext/u2f-api.js"></script>
+[%- END %]
+<h1>Register your U2F key</h1>
+<p>Insert your key and press the button</p>
+<form id="u2f_form" method="post">
+  <input type="hidden" name="u2f_data" id="u2f_data">
+</form>
+<button>Register</button>
+<script type="text/javascript">
+$('button').click(function() {
+    var $message = $('<p>').text('Insert your key and press the button');
+    var $button = $('button');
+    $message.insertAfter($button);
+    $button.hide();
+    u2f.register([% app_id.json | none %], [[% u2f_challenge.json | none %]], [], function(resp) {
+        if(resp.errorCode) {
+            // 5 = timeout
+            if(resp.errorCode === 5) {
+                $button.show();
+                $message.remove();
+                alert('Timed out');
+            } else {
+                alert('Error: ' + resp.errorCode);
+            }
+        } else {
+            document.getElementById('u2f_data').value = JSON.stringify(resp);
+            document.getElementById('u2f_form').submit();
+        }
+    });
+});
+</script>
