@@ -17,17 +17,21 @@ services:
             - .:/opt/insecure-demo
 
     mysql:
-        environment:
-            MYSQL_RANDOM_ROOT_PASSWORD: 1
-        image: mysql/mysql-server:5.7
+        build:
+            context: .
+            dockerfile: Dockerfile.mysql
+        image: quay.io/colinnewell/insecure-demo-mysql-server
         volumes:
             - ./mysql-data:/var/lib/mysql
             - ./sql:/docker-entrypoint-initdb.d/
 
     nginx:
-        image: nginx
+        build:
+            context: .
+            dockerfile: Dockerfile.nginx
         depends_on:
             - dancer
+        image: quay.io/colinnewell/insecure-demo-nginx
         volumes:
             - ./config/nginx/default.conf:/etc/nginx/conf.d/default.conf
             - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
