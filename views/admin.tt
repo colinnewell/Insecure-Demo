@@ -8,6 +8,7 @@
 <li><a href="/admin/cgi-bin/view-feedback.cgi">Feedback</a></li>
 [% END %]
 <li><a href="/admin/cgi-bin/edit-user.cgi?user_id=[% request.env.ID_ID %]">Edit User</a></li>
+<li><a href="/admin/config/u2f-register">Register a U2F key</a></li>
 </ul>
 </p>
 
