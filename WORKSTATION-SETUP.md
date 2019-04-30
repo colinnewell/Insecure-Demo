@@ -26,6 +26,14 @@ site to allow it to run from https://insecure.demo/
 This should create the files `insecure.demo+3.pem` and `insecure.demo+3-key.pem`
 for nginx to use.
 
+If you get this error it's because you've bought the containers up before the
+certificate files have been created.
+
+    ERROR: failed to save certificate key: open ./insecure.demo+3-key.pem: is a directory
+
+If that happens stop the stack (docker-compose stop), `rm -rf` the
+`config/nginx/insecure-demo*` and then re-run `./create_cert.sh`.
+
 ## Running
 
 Now run the stack using docker-compose,
