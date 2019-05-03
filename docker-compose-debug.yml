@@ -1,0 +1,10 @@
+version: "3.3"
+services:
+    dancer:
+        stdin_open: true
+        tty: true
+        command: ["perl", "-d", "-S", "plackup", "-I", "/opt/insecure-demo/lib/", "/opt/insecure-demo/bin/app.psgi"]
+        environment:
+            PERLDB_OPTS: NonStop=1,dumpDepth=3
+        # FIXME: mount a .perldb to set DB::deep?
+
