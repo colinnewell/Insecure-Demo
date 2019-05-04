@@ -6,10 +6,10 @@ use Insecure::Demo::Container 'service';
 
 get 'u2f-register' => sub {
     my $challenge =
-      decode_json( service('Users')->get_u2f_registration_challenge );
+      decode_json( service('U2F')->get_u2f_registration_challenge );
     delete $challenge->{appId};
     template 'u2f-register' => {
-        app_id        => service('Users')->u2f->{origin},
+        app_id        => service('U2F')->origin,
         u2f_challenge => $challenge
     };
 };
@@ -19,7 +19,7 @@ post 'u2f-register' => sub {
     warn $@ if $@;
     status 400 unless $data;
 
-    service('Users')->set_u2f_registration_challenge(
+    service('U2F')->set_u2f_registration_challenge(
         response => $data,
         user_id  => request->env->{ID_ID},
     );

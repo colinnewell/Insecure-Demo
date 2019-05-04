@@ -92,15 +92,15 @@ any '/u2f' => sub {
 get '/u2f' => sub {
     my $user_id = vars->{user_id};
 
-    my $auth = vars->{srv}->get_u2f_auth_challenge( user_id => $user_id, );
+    my $auth = service('U2F')->get_u2f_auth_challenge( user_id => $user_id, );
     template 'u2f-auth',
       {
-        app_id    => $auth->{challenge}{appId},
-        challenge => $auth->{challenge}{challenge},
+        app_id    => $auth->{appId},
+        challenge => $auth->{challenge},
         keys      => [
             {
-                keyHandle => $auth->{challenge}{keyHandle},
-                version   => $auth->{challenge}{version}
+                keyHandle => $auth->{keyHandle},
+                version   => $auth->{version}
             }
         ],
       };
@@ -115,7 +115,7 @@ post '/u2f' => sub {
 
     # FIXME: do I need to authenticate that the challenge came from us?
     if (
-        vars->{srv}->u2f_valid(
+        service('U2F')->u2f_valid(
             auth_response => $data,
             user_id       => $user_id,
             challenge     => body_parameters->get('challenge')

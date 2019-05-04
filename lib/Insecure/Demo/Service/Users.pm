@@ -1,9 +1,7 @@
 package Insecure::Demo::Service::Users;
 
-use Cpanel::JSON::XS qw/decode_json encode_json/;
 use Crypt::Eksblowfish::Bcrypt qw/bcrypt en_base64/;
 use Crypt::Sodium;
-use Crypt::U2F::Server::Simple;
 use Digest::SHA3 qw/sha3_256_hex/;
 use Encode qw/is_utf8 encode_utf8/;
 use MIME::Base64;
@@ -14,7 +12,6 @@ has cookie_key    => ( is => 'ro', required => 1 );
 has dbh           => ( is => 'ro', required => 1 );
 has login_secret  => ( is => 'ro', required => 1 );
 has password_cost => ( is => 'ro', required => 1 );
-has u2f           => ( is => 'ro', required => 1 );
 
 has _settings_base => ( is => 'lazy' );
 
@@ -172,67 +169,7 @@ sub _login_token {
       . sha3_256_hex( join( "\0", $self->cookie_key, $id, $time ) );
 }
 
-sub u2f_valid {
-    my ( $self, %args ) = @_;
-
-    my $u2f = $self->_u2f_for_userid( user_id => $args{user_id} );
-    $u2f->setChallenge( $args{challenge} );
-    my $authok =
-      $u2f->authenticationVerify( encode_json( $args{auth_response} ) );
-}
-
-sub get_u2f_registration_challenge {
-    my ( $self, $user_id ) = shift;
-
-    # FIXME: probably store the challenge against the user?
-    return $self->u2f->registrationChallenge;
-}
-
-sub _u2f_for_userid {
-    my ( $self, %args ) = @_;
-
-    my ( $key_handle, $user_key ) =
-      $self->_load_u2f_key( user_id => $args{user_id} );
-
-    my $u2f = Crypt::U2F::Server::Simple->new(
-        appId     => $self->u2f->{origin},
-        origin    => $self->u2f->{origin},
-        keyHandle => $key_handle,
-        publicKey => $user_key,
-    );
-    return $u2f;
-}
-
-sub get_u2f_auth_challenge {
-    my ( $self, %args ) = @_;
-
-    my $challenge = $self->_u2f_for_userid(%args)->authenticationChallenge;
-    return { challenge => decode_json($challenge) };
-}
-
-sub set_u2f_registration_challenge {
-    my ( $self, %args ) = @_;
-
-    $self->u2f->setChallenge( $args{response}{challenge} );
-
-    # C library being used expects us to pass it json, so repackage
-    # up the bits it wants.
-    my $data = encode_json(
-        {
-            clientData       => $args{response}{clientData},
-            registrationData => $args{response}{registrationData},
-        }
-    );
-    my ( $keyHandle, $userKey ) = $self->u2f->registrationVerify($data);
-    die 'Registration failed: ' . $self->u2f->lastError unless $keyHandle;
-    $self->_store_u2f_key(
-        key_handle => $keyHandle,
-        user_key   => $userKey,
-        user_id    => $args{user_id}
-    );
-}
-
-sub _store_u2f_key {
+sub store_u2f_key {
     my ( $self, %args ) = @_;
 
     $self->dbh->do(
@@ -243,7 +180,7 @@ sub _store_u2f_key {
         undef, $args{user_id} );
 }
 
-sub _load_u2f_key {
+sub load_u2f_key {
     my ( $self, %args ) = @_;
 
     return $self->dbh->selectrow_array(

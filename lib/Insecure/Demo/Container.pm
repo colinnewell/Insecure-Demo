@@ -7,7 +7,6 @@ our @EXPORT_OK = qw(service);
 use Bread::Board;
 use Cpanel::JSON::XS;
 use Crypt::Sodium;
-use Crypt::U2F::Server::Simple;
 use DBI;
 use Insecure::Demo::Schema;
 
@@ -30,6 +29,13 @@ my $services = container 'Services' => as {
             dbh => '/Dependencies/DBConnection',
         },
     );
+    service U2F => (
+        class        => 'Insecure::Demo::Service::U2F',
+        dependencies => {
+            users  => '/Services/Users',
+            origin => '/Config/origin',
+        }
+    );
     service Users => (
         class        => 'Insecure::Demo::Service::Users',
         dependencies => {
@@ -37,7 +43,6 @@ my $services = container 'Services' => as {
             dbh           => '/Dependencies/DBConnection',
             login_secret  => '/Config/loginsecret',
             password_cost => '/Config/passwordcost',
-            u2f           => '/Dependencies/U2F',
         },
     );
     service DBIC => (
@@ -88,18 +93,6 @@ container 'Dependencies' => as {
             options           => '/Config/dbconnection.options',
         },
         lifecycle => 'Singleton',
-    );
-    service U2F => (
-        block => sub {
-            my $s = shift;
-            Crypt::U2F::Server::Simple->new(
-                appId  => $s->param('origin'),
-                origin => $s->param('origin'),
-            );
-        },
-        dependencies => {
-            origin => '/Config/origin',
-        },
     );
 };
 
