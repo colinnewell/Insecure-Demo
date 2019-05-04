@@ -84,8 +84,13 @@ any '/u2f' => sub {
     my $srv   = service('Users');
     $user_id = $srv->get_user_id($token) if $token;
     redirect '/' unless $user_id;
-    var user_id => $user_id;
-    var srv     => $srv;
+    my $logins_cookie = cookies->{login};
+    redirect '/' unless $logins_cookie;
+    my ( undef, $return_url ) =
+      service('Users')->get_user( $logins_cookie->value );
+    var return_url => $return_url;
+    var srv        => $srv;
+    var user_id    => $user_id;
     pass;
 };
 

@@ -32,7 +32,7 @@ my $services = container 'Services' => as {
     service U2F => (
         class        => 'Insecure::Demo::Service::U2F',
         dependencies => {
-            users  => '/Services/Users',
+            users  => 'Users',
             origin => '/Config/origin',
         }
     );
