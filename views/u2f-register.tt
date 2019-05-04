@@ -2,7 +2,6 @@
     <script src="/ext/u2f-api.js"></script>
 [%- END %]
 <h1>Register your U2F key</h1>
-<p>Insert your key and press the button</p>
 <form id="u2f_form" method="post">
   <input type="hidden" name="u2f_data" id="u2f_data">
 </form>
