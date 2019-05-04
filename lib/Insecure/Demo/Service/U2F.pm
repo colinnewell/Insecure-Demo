@@ -2,6 +2,7 @@ package Insecure::Demo::Service::U2F;
 
 use Cpanel::JSON::XS qw/decode_json encode_json/;
 use Crypt::U2F::Server::Simple;
+use Moo;
 
 has origin => ( is => 'ro', required => 1 );
 has users  => ( is => 'ro', required => 1 );
