@@ -5,12 +5,32 @@ use Insecure::Demo::Admin::Config;
 use Insecure::Demo::Service::Users;
 use Plack::Test;
 
-my $mock = mock 'Insecure::Demo::Service::Users' => override =>
-  [ 'store_u2f_key' => sub { }, ];
+my $mock = mock 'Insecure::Demo::Service::Users' => override => [
+    load_u2f_keys => sub {
+        [
+            {
+                key_handle =>
+'4xCpJzebUYc_r74FwNmnL3YEiZ0qAcFO_ykwSMaXDx4RsIyJ-0_bVoA6DlqLcupR1NlSUhlpaSFkSXvEVh78WJNpNDt1iyBCC8f0USoJDiK8DK0c6Ht_TOBHcM7wo4s4',
+                user_key => pack 'H*',
+'045855059149d36a6e8161fe7f2d49fe19168b598889dc076a80892aa4fafa86e9830e3844a0428d5e257ce53594c6226dc10f44d25427fd99db547664564ee961',
+            },
+            {
+                key_handle =>
+'4xCpJzebUYc_r74FwNmnL3YEiZ0qAcFO_ykwSMaXDx4RsIyJ-0_bVoA6DlqLcupR1NlSUhlpaSFkSXvEVh78WJNpNDt1iyBCC8f0USoJDiK8DK0c6Ht_TOBHcM7wo4s3',
+                user_key => pack 'H*',
+'045855059149d36a6e8161fe7f2d49fe19168b598889dc076a80892aa4fafa86e9830e3844a0428d5e257ce53594c6226dc10f44d25427fd99db547664564ee962',
+            },
+        ]
+    },
+    store_u2f_key => sub { },
+];
 
 my $test = Plack::Test->create( Insecure::Demo::Admin::Config->to_app );
 
-my $response = $test->request(
+my $response = $test->request( GET '/u2f-register' );
+like $response->content, qr'keyHandle.*keyHandle';
+
+$response = $test->request(
     POST '/u2f-register',
     Content => [
         'u2f_data' =>

@@ -12,13 +12,17 @@ $('button').click(function() {
     var $button = $('button');
     $message.insertAfter($button);
     $button.hide();
-    u2f.register([% app_id.json | none %], [[% u2f_challenge.json | none %]], [], function(resp) {
+    u2f.register([% app_id.json | none %], [[% u2f_challenge.json | none %]], [% keys.json | none %], function(resp) {
         if(resp.errorCode) {
             // 5 = timeout
             if(resp.errorCode === 5) {
                 $button.show();
                 $message.remove();
                 alert('Timed out');
+            } else if(resp.errorCode === 4) {
+                $button.show();
+                $message.remove();
+                alert('Key already registered');
             } else {
                 alert('Error: ' + resp.errorCode);
             }
