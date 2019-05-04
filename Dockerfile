@@ -3,7 +3,7 @@ FROM perl:5.28
 RUN apt-get update                                                       \
     && apt-get -y --no-install-recommends install default-libmysqlclient-dev libu2f-server-dev libsodium-dev
 
-RUN cpanm DBD::mysql && cpanm -f IPC::System::Simple
+RUN cpanm Term::ReadLine::Perl Term::ReadKey DBD::mysql && cpanm -f IPC::System::Simple
 
 ARG EXTRA_CPANM=""
 WORKDIR /opt/insecure-demo
