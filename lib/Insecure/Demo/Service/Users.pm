@@ -180,12 +180,17 @@ sub store_u2f_key {
         undef, $args{user_id} );
 }
 
-sub load_u2f_key {
+sub load_u2f_keys {
     my ( $self, %args ) = @_;
 
-    return $self->dbh->selectrow_array(
-        'SELECT key_handle, user_key FROM u2f_keys WHERE user_id = ?',
-        undef, $args{user_id} );
+    return $self->dbh->selectall_arrayref(
+        'SELECT key_handle, user_key
+           FROM u2f_keys
+          WHERE user_id = ? AND (key_handle = ? OR ? IS NULL)',
+        { Slice => {} },
+        $args{user_id},
+        ( $args{key} ) x 2
+    );
 }
 
 sub _hash {

@@ -10,7 +10,10 @@ has users  => ( is => 'ro', required => 1 );
 sub u2f_valid {
     my ( $self, %args ) = @_;
 
-    my $u2f = $self->_u2f_for_userid( user_id => $args{user_id} );
+    my $u2f = $self->_u2f_for_userid(
+        user_id => $args{user_id},
+        key     => $args{auth_response}{keyHandle}
+    )->{u2f};
     $u2f->setChallenge( $args{challenge} );
     my $authok =
       $u2f->authenticationVerify( encode_json( $args{auth_response} ) );
@@ -30,23 +33,28 @@ sub get_u2f_registration_challenge {
 sub _u2f_for_userid {
     my ( $self, %args ) = @_;
 
-    my ( $key_handle, $user_key ) =
-      $self->users->load_u2f_key( user_id => $args{user_id} );
+    my $keys = $self->users->load_u2f_keys(
+        key     => $args{key},
+        user_id => $args{user_id},
+    );
+    return unless $keys;
+    my ($key) = @$keys;
 
     my $u2f = Crypt::U2F::Server::Simple->new(
         appId     => $self->origin,
         origin    => $self->origin,
-        keyHandle => $key_handle,
-        publicKey => $user_key,
+        keyHandle => $key->{key_handle},
+        publicKey => $key->{user_key},
     );
-    return $u2f;
+    return { keys => $keys, u2f => $u2f };
 }
 
 sub get_u2f_auth_challenge {
     my ( $self, %args ) = @_;
 
-    my $challenge = $self->_u2f_for_userid(%args)->authenticationChallenge;
-    return decode_json($challenge);
+    my $u2f_info  = $self->_u2f_for_userid(%args);
+    my $challenge = $u2f_info->{u2f}->authenticationChallenge;
+    return { challenge => decode_json($challenge), keys => $u2f_info->{keys} };
 }
 
 sub set_u2f_registration_challenge {

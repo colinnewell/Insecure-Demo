@@ -98,17 +98,18 @@ get '/u2f' => sub {
     my $user_id = vars->{user_id};
 
     my $auth = service('U2F')->get_u2f_auth_challenge( user_id => $user_id, );
-    template 'u2f-auth',
-      {
-        app_id    => $auth->{appId},
-        challenge => $auth->{challenge},
+    template 'u2f-auth', {
+        app_id    => $auth->{challenge}{appId},
+        challenge => $auth->{challenge}{challenge},
         keys      => [
-            {
-                keyHandle => $auth->{keyHandle},
-                version   => $auth->{version}
-            }
+            map {
+                {
+                    keyHandle => $_->{key_handle},
+                    version   => $auth->{challenge}{version},
+                }
+            } @{ $auth->{keys} }
         ],
-      };
+    };
 };
 
 post '/u2f' => sub {
