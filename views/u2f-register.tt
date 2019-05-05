@@ -31,6 +31,10 @@ $('button').click(function() {
                 alert('Error: ' + resp.errorCode);
             }
         } else {
+            if(!resp.challenge) {
+                // fudge for Firefox
+                resp.challenge = [% u2f_challenge.challenge.json | none %];
+            }
             document.getElementById('u2f_data').value = JSON.stringify(resp);
             document.getElementById('u2f_form').submit();
         }
