@@ -14,7 +14,6 @@ sub u2f_valid {
         user_id => $args{user_id},
         key     => $args{auth_response}{keyHandle}
     )->{u2f};
-    die 'Unable to setup u2f: ' . Crypt::U2F::Server::Simple::lastError() unless $u2f;
     $u2f->setChallenge( $args{challenge} );
     my $authok =
       $u2f->authenticationVerify( encode_json( $args{auth_response} ) );
@@ -47,6 +46,7 @@ sub _u2f_for_userid {
         keyHandle => $key->{key_handle},
         publicKey => $key->{user_key},
     );
+    die 'Unable to setup u2f: ' . Crypt::U2F::Server::Simple::lastError() unless $u2f;
     return { keys => $keys, u2f => $u2f };
 }
 
@@ -55,8 +55,7 @@ sub get_u2f_auth_challenge {
 
     my $u2f_info  = $self->_u2f_for_userid(%args);
     my $u2f = $u2f_info->{u2f};
-    die 'Unable to setup u2f: ' . Crypt::U2F::Server::Simple::lastError() unless $u2f;
-    my $challenge = $u2f_info->{u2f}->authenticationChallenge;
+    my $challenge = $u2f->authenticationChallenge;
     die 'Unable to setup u2f: ' . $u2f->lastError()  unless $challenge;
     return { challenge => decode_json($challenge), keys => $u2f_info->{keys} };
 }
