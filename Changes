@@ -2,5 +2,20 @@ Changes for Insecure-Demo
 
 {{ $NEXT }}
 
-  - Initial Version
+    Added U2F support.
 
+    Switched site to SSL to solve all our security problems.
+
+    This means that users now need to generate SSL certificates.
+
+0.03
+
+    Also added a facility for providing feedback to the site.
+
+0.02
+
+    Added auth onto most of the site.
+
+0.01
+
+    First version - provides a facility for ordering fish and chips.
