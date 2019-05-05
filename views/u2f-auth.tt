@@ -2,6 +2,9 @@
     <script src="/ext/u2f-api.js"></script>
 [%- END %]
 <h1>Verify your identity with your U2F key</h1>
+[% IF problem %]
+<p>There was a problem authenticating.  Please reload the page and try again, or contact your admin.</p>
+[% ELSE %]
 <p>Insert your key and press the button.</p>
 <form id="u2f_form" method="post">
   <input type="hidden" name="challenge" value="[% challenge %]">
@@ -11,7 +14,9 @@
     u2f.sign([% app_id.json | none %], [% challenge.json | none %], [% keys.json | none %], function(resp) {
         console.log(resp);
         if(resp.errorCode) {
-            if(resp.errorCode === 4) {
+            if(resp.errorCode === 2) {
+                alert('There appears to be a configuration error with the site.  Please speak to the admin.');
+            } else if(resp.errorCode === 4) {
                 alert('Wrong key');
             } else if(resp.errorCode === 5) {
                 alert('Timed out');
@@ -25,3 +30,4 @@
         }
     });
 </script>
+[% END %]

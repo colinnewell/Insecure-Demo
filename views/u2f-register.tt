@@ -5,6 +5,9 @@
 <form id="u2f_form" method="post">
   <input type="hidden" name="u2f_data" id="u2f_data">
 </form>
+[% IF problem %]
+<p>Failed to register key.  There was a problem.  Either refresh the page and try again, or contact your admin.</p>
+[% ELSE %]
 <button>Register</button>
 <script type="text/javascript">
 $('button').click(function() {
@@ -14,8 +17,9 @@ $('button').click(function() {
     $button.hide();
     u2f.register([% app_id.json | none %], [[% u2f_challenge.json | none %]], [% keys.json | none %], function(resp) {
         if(resp.errorCode) {
-            // 5 = timeout
-            if(resp.errorCode === 5) {
+            if(resp.errorCode === 2) {
+                alert('There appears to be a configuration error with the site.  Please speak to the admin.');
+            } else if(resp.errorCode === 5) {
                 $button.show();
                 $message.remove();
                 alert('Timed out');
@@ -33,3 +37,4 @@ $('button').click(function() {
     });
 });
 </script>
+[% END %]

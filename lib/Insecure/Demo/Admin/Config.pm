@@ -12,8 +12,8 @@ get 'u2f-register' => sub {
       service('Users')->load_u2f_keys( user_id => request->env->{ID_ID}, );
 
     template 'u2f-register' => {
-        app_id        => service('U2F')->origin,
-        keys          => [
+        app_id => service('U2F')->origin,
+        keys   => [
             map {
                 {
                     keyHandle => $_->{key_handle},
@@ -30,10 +30,16 @@ post 'u2f-register' => sub {
     warn $@ if $@;
     status 400 unless $data;
 
-    service('U2F')->set_u2f_registration_challenge(
-        response => $data,
-        user_id  => request->env->{ID_ID},
-    );
+    eval {
+        service('U2F')->set_u2f_registration_challenge(
+            response => $data,
+            user_id  => request->env->{ID_ID},
+        );
+    };
+    if ($@) {
+        warn $@;
+        return template 'u2f-register', { problem => 1 };
+    }
 
     redirect '/u2f-registered';
 };

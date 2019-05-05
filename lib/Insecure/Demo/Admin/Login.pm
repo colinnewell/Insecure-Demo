@@ -119,34 +119,34 @@ post '/u2f' => sub {
     warn $@ if $@;
     status 400 unless $data;
 
-    # FIXME: do I need to authenticate that the challenge came from us?
-    if (
+    my $authenticated = eval {
         service('U2F')->u2f_valid(
             auth_response => $data,
             user_id       => $user_id,
             challenge     => body_parameters->get('challenge')
-        )
-      )
-    {
-        # set login cookie
-        cookie
-          'user' =>
-          vars->{srv}->_login_token( $user_id, expiry_time => 8 * 60 * 60 ),
-          expires   => '+8h',
-          secure    => 1,
-          http_only => 1;
+        );
+    };
 
-        _delete_cookies( 'login', 'userid' );
-
-        if ( vars->{return_url} =~ m|^/| ) {
-            redirect 'http://' . request->host . vars->{return_url};
-        }
-
-        redirect 'http://' . request->host . '/admin';
+    unless ($authenticated) {
+        warn $@ if $@;
+        return template 'u2f-auth', { problem => 1 };
     }
 
-    # FIXME: figure out a proper failure thing
-    redirect '/';
+    # set login cookie
+    cookie
+      'user' =>
+      vars->{srv}->_login_token( $user_id, expiry_time => 8 * 60 * 60 ),
+      expires   => '+8h',
+      secure    => 1,
+      http_only => 1;
+
+    _delete_cookies( 'login', 'userid' );
+
+    if ( vars->{return_url} =~ m|^/| ) {
+        redirect 'http://' . request->host . vars->{return_url};
+    }
+
+    redirect 'http://' . request->host . '/admin';
 };
 
 sub _delete_cookies {
