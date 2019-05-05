@@ -2,7 +2,7 @@ version: "3.3"
 services:
 
     dancer:
-        image: quay.io/colinnewell/insecure-demo:u2f-auth
+        image: quay.io/colinnewell/insecure-demo
         depends_on:
             - mysql
         environment:
