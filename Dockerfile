@@ -1,4 +1,4 @@
-FROM perl:5.28
+FROM perl:5.30
 
 RUN apt-get update                                                       \
     && apt-get -y --no-install-recommends install default-libmysqlclient-dev libu2f-server-dev libsodium-dev
