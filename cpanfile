@@ -16,6 +16,7 @@ requires "DBIx::Class::Candy"                 => "0";
 requires "Digest::SHA3"                       => "0";
 requires "File::ShareDir"                     => "0";
 requires "HTML::FormHandler"                  => "0";
+requires "JSON"                               => "0";
 requires "Moo"                                => "0";
 requires "Path::Tiny"                         => "0";
 requires "Plack::Builder"                     => "0";
