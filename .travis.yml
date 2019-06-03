@@ -1,12 +1,11 @@
 dist: xenial
 language: perl
 perl:
-  - "5.26"
+  - "5.28"
 matrix:
   include:
-    - perl: 5.28
+    - perl: 5.30
       env: COVERAGE=1
-      sudo: required
       script:
         - cpanm -n --skip-satisfied Devel::Cover::Report::Coveralls
         - PERL5OPT=-MDevel::Cover prove -lv t
