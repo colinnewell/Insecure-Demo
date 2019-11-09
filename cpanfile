@@ -33,6 +33,7 @@ requires "Template"                           => "0";
 requires "Template::Alloy"                    => "0";
 requires "Template::Plugin::JSON"             => "0";
 requires "warnings"                           => "0";
+requires "XML::LibXML"                        => "0";
 
 on 'test' => sub {
     requires "ExtUtils::MakeMaker"       => "0";

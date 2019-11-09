@@ -35,10 +35,12 @@ builder {
       secure      => 1,
       httponly    => 1,
       secret      => $secret_key;
-    enable 'CSRFBlock';
 
-    mount '/admin/login'  => Insecure::Demo::Admin::Login->to_app;
-    mount '/admin'        => builder {
+    # avoid turning on XSRF detection for the XML API routes
+    enable_if { shift->{CONTENT_TYPE} ne 'text/xml' } 'CSRFBlock';
+
+    mount '/admin/login' => Insecure::Demo::Admin::Login->to_app;
+    mount '/admin'       => builder {
         enable '+Insecure::Demo::Middleware::Admin';
         for (<$cgi_dir/admin/*.cgi>) {
             my $sub  = CGI::Compile->compile($_);
@@ -47,8 +49,14 @@ builder {
             mount $path, $app;
         }
         mount '/config' => Insecure::Demo::Admin::Config->to_app;
-        mount '/' => Insecure::Demo::Admin->to_app;
+        mount '/'       => Insecure::Demo::Admin->to_app;
     };
+    for (<$cgi_dir/*.cgi>) {
+        my $sub  = CGI::Compile->compile($_);
+        my $app  = CGI::Emulate::PSGI->handler($sub);
+        my $path = '/cgi-bin/' . path($_)->basename;
+        mount $path, $app;
+    }
     mount '/' => Insecure::Demo->to_app;
 }
 
