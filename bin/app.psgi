@@ -12,6 +12,7 @@ use Insecure::Demo;
 use Insecure::Demo::Admin;
 use Insecure::Demo::Admin::Config;
 use Insecure::Demo::Admin::Login;
+use Insecure::Demo::Admin::TimeLogger;
 use Path::Tiny;
 use Plack::Builder;
 
@@ -37,7 +38,10 @@ builder {
       secret      => $secret_key;
 
     # avoid turning on XSRF detection for the XML API routes
-    enable_if { shift->{CONTENT_TYPE} ne 'text/xml' } 'CSRFBlock';
+    enable_if {
+        my $content_type = shift->{CONTENT_TYPE};
+        !$content_type || $content_type ne 'text/xml'
+    } 'CSRFBlock';
 
     mount '/admin/login' => Insecure::Demo::Admin::Login->to_app;
     mount '/admin'       => builder {
@@ -48,8 +52,9 @@ builder {
             my $path = '/cgi-bin/' . $_ =~ s|^.*/admin/||r;
             mount $path, $app;
         }
-        mount '/config' => Insecure::Demo::Admin::Config->to_app;
-        mount '/'       => Insecure::Demo::Admin->to_app;
+        mount '/time-logger' => Insecure::Demo::Admin::TimeLogger->to_app;
+        mount '/config'      => Insecure::Demo::Admin::Config->to_app;
+        mount '/'            => Insecure::Demo::Admin->to_app;
     };
     for (<$cgi_dir/*.cgi>) {
         my $sub  = CGI::Compile->compile($_);

@@ -29,6 +29,12 @@ my $services = container 'Services' => as {
             dbh => '/Dependencies/DBConnection',
         },
     );
+    service TimeLogging => (
+        class        => 'Insecure::Demo::Service::TimeLogging',
+        dependencies => {
+            dbh => '/Dependencies/DBConnection',
+        },
+    );
     service U2F => (
         class        => 'Insecure::Demo::Service::U2F',
         dependencies => {

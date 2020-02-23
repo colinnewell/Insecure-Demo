@@ -3,6 +3,7 @@
 <ul>
 <li><a href="/admin/fish-and-chips">Fish and Chips</a></li>
 <li><a href="/admin/number-check">Phone numbers</a></li>
+<li><a href="/admin/time-logger">Time Logger</a></li>
 [% IF request.env.ID_ADMIN %]
 <li><a href="/admin/users">Users</a></li>
 <li><a href="/admin/cgi-bin/view-feedback.cgi">Feedback</a></li>

@@ -1,0 +1,16 @@
+USE demo;
+
+CREATE TABLE tickets (
+    id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    code VARCHAR(10) UNIQUE,
+    title VARCHAR(255) UNIQUE
+);
+
+CREATE TABLE time_spent (
+    id        INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    user_id   INT NOT NULL,
+    ticket_id INT NOT NULL,
+    seconds   INT UNSIGNED NOT NULL,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (ticket_id) REFERENCES tickets(id) ON DELETE CASCADE
+);

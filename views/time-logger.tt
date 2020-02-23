@@ -1,0 +1,40 @@
+[% USE JSON %]
+<script>
+    var users_name = [% request.env.ID_NAME.json | none %];
+</script>
+<script src="/js/time-logger.js"></script>
+<table class="times">
+    <tr>
+        <th>Ticket</th>
+        <th>Title</th>
+        <th>Duration</th>
+        <th>User</th>
+    </tr>
+    [% FOR ticket IN entries %]
+        <tr>
+            <td>[% ticket.code %]</td>
+            <td>[% ticket.title %]</td>
+            <td>[% ticket.seconds %]</td>
+            <td>[% ticket.name %]</td>
+        </tr>
+    [% END %]
+</table>
+<div class="dialog entry" title="Log time">
+    <form method="POST">
+        <label for="code">Code</label>
+        <input name="code" id="code" type="text">
+
+        <label for="time">Time Spent</label>
+        <input type="number" name="seconds" id="seconds">
+
+        <input name="ticket_id" id="ticket_id" type="hidden">
+    </form>
+</div>
+<div class="dialog ticket" title="New ticket">
+    <form method="POST">
+        <label for="new_code">Code</label>
+        <input name="new_code" id="new_code" type="text">
+        <label for="title">Title</label>
+        <input name="title" id="title" type="text">
+    </form>
+</div>

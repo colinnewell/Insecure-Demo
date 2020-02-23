@@ -1,3 +1,4 @@
+requires "experimental"                       => "0";
 requires "Auth::GoogleAuth"                   => "0";
 requires "Bread::Board"                       => "0";
 requires "Carp::Always"                       => "0";
