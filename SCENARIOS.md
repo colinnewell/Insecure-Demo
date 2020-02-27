@@ -29,3 +29,10 @@ An attack was detected against the system.  We have [nginx logs](https://gist.gi
 
 Figure out what the attacker did and what they exploited.  See what data they
 retrieved by examining the logs closely.
+
+## Outrage in the office
+
+A bit of a forensics investigation to see how a XSS vulnerability led
+to office strife.
+
+https://gist.github.com/colinnewell/e50b76edc506dd29a132ad2eca78b520
