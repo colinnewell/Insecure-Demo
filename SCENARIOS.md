@@ -36,3 +36,5 @@ A bit of a forensics investigation to see how a XSS vulnerability led
 to office strife.
 
 https://gist.github.com/colinnewell/e50b76edc506dd29a132ad2eca78b520
+
+Note: the DB schema may not match the latest code.
