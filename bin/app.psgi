@@ -4,6 +4,7 @@
 
 use strict;
 use warnings;
+use feature 'signatures';
 
 use CGI::Compile;
 use CGI::Emulate::PSGI;
@@ -30,7 +31,22 @@ my $cgi_dir = path( module_dir('Insecure::Demo') )->child('cgi-bin')->stringify;
 my $cgi     = Plack::Builder->new;
 
 builder {
-    enable 'NewFangle';
+    enable 'NewFangle' => (
+        start_transaction => sub ( $app, $env ) {
+            my $name = $env->{REQUEST_URI} =~ s/\?.*//r;
+            # assume numbers are an id in the url and
+            # replace with a static place holder to make the urls
+            # group up.
+            $name =~ s/\b\d+\b/NNN/g;
+
+            my $tx = $app->start_web_transaction($name);
+
+            $tx->add_attribute_string( host   => $env->{HTTP_HOST} );
+            $tx->add_attribute_string( method => $env->{REQUEST_METHOD} );
+
+            $tx;
+        },
+    );
     enable 'Session::Cookie',
       session_key => 'insecure-demo',
       expires     => 12 * 3600,         # 12 hour
