@@ -1,0 +1,13 @@
+version: "3.3"
+services:
+
+    dancer:
+        environment:
+            NEWRELIC_LICENSE_KEY: ${NEWRELIC_LICENSE_KEY}
+            NEWRELIC_ENABLED: "true"
+            NEWRELIC_DAEMON_HOST: newrelic:31339
+        depends_on:
+          - newrelic
+
+    newrelic:
+        image: newrelic/c-daemon

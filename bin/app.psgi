@@ -30,6 +30,7 @@ my $cgi_dir = path( module_dir('Insecure::Demo') )->child('cgi-bin')->stringify;
 my $cgi     = Plack::Builder->new;
 
 builder {
+    enable 'NewFangle';
     enable 'Session::Cookie',
       session_key => 'insecure-demo',
       expires     => 12 * 3600,         # 12 hour

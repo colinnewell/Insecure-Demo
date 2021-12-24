@@ -13,6 +13,9 @@ services:
             INSECURE_DEMO_DBCONNECTION: "dbi:mysql:dbname=demo;host=mysql"
             INSECURE_DEMO_DBCONNECTION_USERNAME: "site"
             INSECURE_DEMO_DBCONNECTION_PASSWORD: "84aaa213dbb7aa3d67d57ba49acc2a71b7c4cd8bf689bfdf4372e4a34dceeca0"
+
+            NEWRELIC_APP_NAME: Insecure Demo
+            NEWRELIC_LOG_LEVEL: info
         volumes:
             - .:/opt/insecure-demo
 
