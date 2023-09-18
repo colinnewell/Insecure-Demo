@@ -1,5 +1,9 @@
 # Insecure Demo
 
+This is archived as it's no longer under development and updating the deps to
+avoid security problems isn't worth it for me.  Feel free to clone the repo if
+you want to do something with it.
+
 A Demo platform for playing about with vulnerabilities.
 
 This software is deliberately built insecure to allow the demonstration of
